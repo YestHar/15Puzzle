@@ -8,20 +8,17 @@ Board::Board() {
     initialize();
 }
 
-// Initializes the board with a solvable random configuration
 void Board::initialize() {
     int numbers[SIZE * SIZE];
     for (int i = 0; i < SIZE * SIZE; i++) {
         numbers[i] = i;
     }
 
-    // Shuffle until the grid is solvable
     do {
         std::srand(std::time(0));
         std::random_shuffle(std::begin(numbers), std::end(numbers));
     } while (!isSolvable(numbers));
 
-    // Fill the grid with shuffled numbers
     int index = 0;
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
@@ -30,31 +27,27 @@ void Board::initialize() {
     }
 }
 
-// Checks if the grid is in the solved state
 bool Board::isBoardSolved() const {
     int counter = 1;
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
-            if (i == SIZE - 1 && j == SIZE - 1) {
-                return grid[i][j] == 0; // Bottom-right should be the empty tile
-            }
-            if (grid[i][j] != counter++) {
+            if (grid[i][j] != counter && !(i == SIZE - 1 && j == SIZE - 1)) {
                 return false;
             }
+            counter++;
         }
     }
     return true;
 }
 
-// Returns the tile value at a specific position
+
 int Board::getTile(int row, int col) const {
     if (row >= 0 && row < SIZE && col >= 0 && col < SIZE) {
         return grid[row][col];
     }
-    return -1; // Invalid position
+    return -1; 
 }
 
-// Swaps two tiles in the grid
 bool Board::swap(int row1, int col1, int row2, int col2) {
     if (row1 >= 0 && row1 < SIZE && col1 >= 0 && col1 < SIZE &&
         row2 >= 0 && row2 < SIZE && col2 >= 0 && col2 < SIZE) {
@@ -64,7 +57,6 @@ bool Board::swap(int row1, int col1, int row2, int col2) {
     return false;
 }
 
-// Helper function to check if the current puzzle configuration is solvable
 bool Board::isSolvable(int numbers[]) const {
     int inversions = 0;
     for (int i = 0; i < SIZE * SIZE - 1; i++) {
@@ -77,7 +69,6 @@ bool Board::isSolvable(int numbers[]) const {
     return inversions % 2 == 0;
 }
 
-// Finds the position of the empty tile (0) in the grid
 std::pair<int, int> Board::findZero() const {
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
@@ -86,7 +77,7 @@ std::pair<int, int> Board::findZero() const {
             }
         }
     }
-    return {-1, -1}; // This should never happen if the grid is properly initialized
+    return {-1, -1}; 
 }
 
 
